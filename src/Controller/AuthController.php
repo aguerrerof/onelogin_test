@@ -3,11 +3,10 @@
 namespace App\Controller;
 
 use Exception;
-use OneLogin_Saml2_Utils;
 use Symfony\Component\HttpFoundation\Response;
-use OneLogin_Saml2_Auth;
-use OneLogin_Saml2_Error;
-use OneLogin_Saml2_Settings;
+use OneLogin\Saml2\Error as OneLogin_Saml2_Error;
+use OneLogin\Saml2\Settings as OneLogin_Saml2_Settings;
+use OneLogin\Saml2\Auth as OneLogin_Saml2_Auth;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -63,7 +62,9 @@ class AuthController
         }
         try {
             $auth = new OneLogin_Saml2_Auth($this->configuration_bundle);
-        } catch (\OneLogin_Saml2_Error $e) {
+        } catch (OneLogin_Saml2_Error $e) {
+            return new Response($e->getMessage());
+        } catch (Exception $e) {
             return new Response($e->getMessage());
         }
 
