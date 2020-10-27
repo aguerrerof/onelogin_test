@@ -18,7 +18,16 @@ class AttributesController
      */
     private $configuration_bundle;
 
-    public function __construct(string $baseUrl, string $idpEntityId, string $ssoUrl, string $slsUrl, string $idpCert)
+    /**
+     * AttributesController constructor.
+     * @param string $baseUrl
+     * @param string $nameIdFormat
+     * @param string $idpEntityId
+     * @param string $ssoUrl
+     * @param string $slsUrl
+     * @param string $idpCert
+     */
+    public function __construct(string $baseUrl, string $nameIdFormat, string $idpEntityId, string $ssoUrl, string $slsUrl, string $idpCert)
     {
         //Not a good practice, I know
         $this->spBaseUrl = $baseUrl;
@@ -31,7 +40,7 @@ class AttributesController
                 'singleLogoutService' => array(
                     'url' => $this->spBaseUrl . '/saml?sls',
                 ),
-                'NameIDFormat' => 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
+                'NameIDFormat' => $nameIdFormat,
             ),
             'idp' => array(
                 'entityId' => $idpEntityId,
@@ -39,7 +48,7 @@ class AttributesController
                     'url' => $ssoUrl,
                 ),
                 'singleLogoutService' => array(
-                    'url' =>$slsUrl,
+                    'url' => $slsUrl,
                 ),
                 'x509cert' => $idpCert,
             ),

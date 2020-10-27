@@ -21,14 +21,15 @@ class IndexController
     private $spBaseUrl;
 
     /**
-     * AuthController constructor.
+     * IndexController constructor.
      * @param string $baseUrl
+     * @param string $nameIdFormat
      * @param string $idpEntityId
      * @param string $ssoUrl
      * @param string $slsUrl
      * @param string $idpCert
      */
-    public function __construct(string $baseUrl, string $idpEntityId, string $ssoUrl, string $slsUrl, string $idpCert)
+    public function __construct(string $baseUrl, string $nameIdFormat, string $idpEntityId, string $ssoUrl, string $slsUrl, string $idpCert)
     {
         //Not a good practice, I know
         $this->spBaseUrl = $baseUrl;
@@ -41,7 +42,7 @@ class IndexController
                 'singleLogoutService' => array(
                     'url' => $this->spBaseUrl . '/saml?sls',
                 ),
-                'NameIDFormat' => 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
+                'NameIDFormat' => $nameIdFormat,
             ),
             'idp' => array(
                 'entityId' => $idpEntityId,
@@ -69,14 +70,12 @@ class IndexController
         }
         try {
             $auth = new OneLogin_Saml2_Auth($this->configuration_bundle);
-        } catch (OneLogin_Saml2_Error $e) {
-            return new Response($e->getMessage());
         } catch (Exception $e) {
             return new Response($e->getMessage());
         }
 
         if (isset($_GET['sso'])) {
-            $auth->login();
+            //$auth->login();
 
             # If AuthNRequest ID need to be saved in order to later validate it, do instead
             $ssoBuiltUrl = $auth->login(null, array(), false, false, true);
