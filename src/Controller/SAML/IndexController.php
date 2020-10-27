@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\SAML;
 
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
 use OneLogin\Saml2\Error as OneLogin_Saml2_Error;
 use OneLogin\Saml2\Settings as OneLogin_Saml2_Settings;
 use OneLogin\Saml2\Auth as OneLogin_Saml2_Auth;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
-class AuthController
+class IndexController
 {
     /**
      * @var array[]
@@ -23,11 +22,16 @@ class AuthController
 
     /**
      * AuthController constructor.
+     * @param string $baseUrl
+     * @param string $idpEntityId
+     * @param string $ssoUrl
+     * @param string $slsUrl
+     * @param string $idpCert
      */
-    public function __construct()
+    public function __construct(string $baseUrl, string $idpEntityId, string $ssoUrl, string $slsUrl, string $idpCert)
     {
         //Not a good practice, I know
-        $this->spBaseUrl = $_ENV['BASE_URL'];
+        $this->spBaseUrl = $baseUrl;
         $this->configuration_bundle = [
             'sp' => array(
                 'entityId' => $this->spBaseUrl . '/metadata',
@@ -40,14 +44,14 @@ class AuthController
                 'NameIDFormat' => 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
             ),
             'idp' => array(
-                'entityId' => 'https://app.onelogin.com/saml/metadata/de21a386-47b2-4860-a12a-0d7d45db2746',
+                'entityId' => $idpEntityId,
                 'singleSignOnService' => array(
-                    'url' => 'https://teamq-dev.onelogin.com/trust/saml2/http-post/sso/de21a386-47b2-4860-a12a-0d7d45db2746',
+                    'url' => $ssoUrl,
                 ),
                 'singleLogoutService' => array(
-                    'url' => 'https://teamq-dev.onelogin.com/trust/saml2/http-redirect/slo/1290930',
+                    'url' => $slsUrl,
                 ),
-                'x509cert' => '0E:27:28:9D:4A:85:BA:E3:8F:2D:3B:78:59:35:E0:12:9E:E8:28:D6',
+                'x509cert' => $idpCert,
             ),
         ];
     }
@@ -55,9 +59,12 @@ class AuthController
     /**
      * @Route("/saml", name="saml_auth")
      */
-    public function index()
+    public function saml()
     {
         if (!isset($_SESSION)) {
+            session_start();
+        } else {
+            session_destroy();
             session_start();
         }
         try {
@@ -72,12 +79,12 @@ class AuthController
             $auth->login();
 
             # If AuthNRequest ID need to be saved in order to later validate it, do instead
-            # $ssoBuiltUrl = $auth->login(null, array(), false, false, true);
-            # $_SESSION['AuthNRequestID'] = $auth->getLastRequestID();
-            # header('Pragma: no-cache');
-            # header('Cache-Control: no-cache, must-revalidate');
-            # header('Location: ' . $ssoBuiltUrl);
-            # exit();
+            $ssoBuiltUrl = $auth->login(null, array(), false, false, true);
+            $_SESSION['AuthNRequestID'] = $auth->getLastRequestID();
+            header('Pragma: no-cache');
+            header('Cache-Control: no-cache, must-revalidate');
+            header('Location: ' . $ssoBuiltUrl);
+            exit();
 
         } else if (isset($_GET['sso2'])) {
             $returnTo = $this->spBaseUrl . '/attributes';
@@ -125,9 +132,8 @@ class AuthController
             $auth->processResponse($requestID);
 
             $errors = $auth->getErrors();
-
             if (!empty($errors)) {
-                $errors =  implode(', ', $errors);
+                $errors = implode(', ', $errors);
                 return new Response($errors);
             }
 
@@ -185,64 +191,5 @@ class AuthController
             $response .= '<p><a href="?sso2" >Login and access to attrs.php page</a></p>';
         }
         return new Response($response, Response::HTTP_OK);
-    }
-
-    /**
-     * @Route("/metadata", name="metadata")
-     */
-    public function metadata()
-    {
-        try {
-            #$auth = new OneLogin_Saml2_Auth($settingsInfo);
-            #$settings = $auth->getSettings();
-            // Now we only validate SP settings
-            $settings = new OneLogin_Saml2_Settings($this->configuration_bundle, true);
-            $metadata = $settings->getSPMetadata();
-            $errors = $settings->validateMetadata($metadata);
-            if (!empty($errors)) {
-                throw new OneLogin_Saml2_Error(
-                    'Invalid SP metadata: ' . implode(', ', $errors),
-                    OneLogin_Saml2_Error::METADATA_SP_INVALID
-                );
-            }
-        } catch (Exception $e) {
-            return $e->getMessage();
-        }
-        header('Content-Type: text/xml');
-        return new Response($metadata);
-    }
-
-    /**
-     * @Route("/attributes", name="attributes")
-     */
-    public function attributes()
-    {
-        if (!isset($_SESSION)) {
-            session_start();
-        }
-        $response = "";
-        if (isset($_SESSION['samlUserdata'])) {
-            if (!empty($_SESSION['samlUserdata'])) {
-                $attributes = $_SESSION['samlUserdata'];
-                $response .= 'You have the following attributes:<br>';
-                $response .= '<table><thead><th>Name</th><th>Values</th></thead><tbody>';
-                foreach ($attributes as $attributeName => $attributeValues) {
-                    $response .= '<tr><td>' . htmlentities($attributeName) . '</td><td><ul>';
-                    foreach ($attributeValues as $attributeValue) {
-                        $response .= '<li>' . htmlentities($attributeValue) . '</li>';
-                    }
-                    $response .= '</ul></td></tr>';
-                }
-                $response .= '</tbody></table>';
-            } else {
-                $response .= "<p>You don't have any attribute</p>";
-            }
-
-            $response .= "<p><a href='{$this->spBaseUrl}/saml?slo' >Logout</a></p>";
-        } else {
-            $response .= "<p><a href='{$this->spBaseUrl}/saml?sso2'>Login and access later to this page</a></p>";
-
-        }
-        return new Response($response);
     }
 }
