@@ -21,9 +21,9 @@ class IdentityProvider
 
     public function __construct(string $baseUrl, string $nameIdFormat, string $idpEntityId, string $ssoUrl, string $slsUrl, string $idpCert)
     {
-        //Not a good practice, I know
         $this->serviceProviderUrl = $baseUrl;
         $this->configuration = [
+            'debug' => true,
             'sp' => array(
                 'entityId' => $this->serviceProviderUrl . '/metadata',
                 'assertionConsumerService' => array(

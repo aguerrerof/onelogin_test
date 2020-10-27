@@ -4,10 +4,9 @@ namespace App\Controller\SAML;
 
 use App\Service\IdentityProvider;
 use Exception;
+use OneLogin\Saml2\ValidationError;
 use Symfony\Component\HttpFoundation\Response;
-use OneLogin\Saml2\Error as OneLogin_Saml2_Error;
-use OneLogin\Saml2\Settings as OneLogin_Saml2_Settings;
-use OneLogin\Saml2\Auth as OneLogin_Saml2_Auth;
+use OneLogin\Saml2\Error;
 use Symfony\Component\Routing\Annotation\Route;
 
 class IndexController
@@ -29,6 +28,7 @@ class IndexController
 
     /**
      * @Route("/saml", name="saml_auth")
+     * @throws Error|\Doctrine\DBAL\Exception
      */
     public function saml()
     {
@@ -41,14 +41,13 @@ class IndexController
         try {
             $auth = $this->identityProviderService->auth();
         } catch (Exception $e) {
-            return new Response($e->getMessage());
+            return new Response($e->getMessage(), Response::HTTP_CONFLICT);
         }
-
         if (isset($_GET['sso'])) {
             //$auth->login();
 
             # If AuthNRequest ID need to be saved in order to later validate it, do instead
-            $ssoBuiltUrl =$this->identityProviderService->getSSOUrl($auth);
+            $ssoBuiltUrl = $this->identityProviderService->getSSOUrl($auth);
             $_SESSION['AuthNRequestID'] = $auth->getLastRequestID();
             header('Pragma: no-cache');
             header('Cache-Control: no-cache, must-revalidate');
@@ -58,7 +57,11 @@ class IndexController
         } else if (isset($_GET['sso2'])) {
             $configuration = $this->identityProviderService->getConfiguration();
             $returnTo = $configuration["sp"]["entityId"];
-            $auth->login($returnTo);
+            try {
+                $auth->login($returnTo);
+            } catch (Error $e) {
+                return new Response($e->getMessage(), Response::HTTP_CONFLICT);
+            }
         } else if (isset($_GET['slo'])) {
             $returnTo = null;
             $parameters = array();
@@ -99,16 +102,21 @@ class IndexController
                 $requestID = null;
             }
 
-            $auth->processResponse($requestID);
+            try {
+                $auth->processResponse($requestID);
+            } catch (Error $e) {
+            } catch (ValidationError $e) {
+                return new Response($e->getMessage(), Response::HTTP_CONFLICT);
+            }
 
             $errors = $auth->getErrors();
             if (!empty($errors)) {
                 $errors = implode(', ', $errors);
-                return new Response($errors);
+                return new Response($errors, Response::HTTP_CONFLICT);
             }
 
             if (!$auth->isAuthenticated()) {
-                return new Response("<p>Not authenticated</p>");
+                return new Response("<p>Not authenticated</p>", Response::HTTP_UNAUTHORIZED);
             }
 
             $_SESSION['samlUserdata'] = $auth->getAttributes();
@@ -131,7 +139,7 @@ class IndexController
             $auth->processSLO(false, $requestID);
             $errors = $auth->getErrors();
             if (empty($errors)) {
-                return new Response("<p>Sucessfully logged out</p>");
+                return new Response("<p>Sucessfully logged out</p>", Response::HTTP_OK);
 
             } else {
                 return new Response(implode(', ', $errors));
