@@ -47,7 +47,12 @@ class MetadataController
         } catch (Exception $e) {
             return $e->getMessage();
         }
-        //header('Content-Type: text/xml');
-        return new Response($metadata);
+        return new Response(
+            $metadata,
+            Response::HTTP_OK,
+            [
+                'Content-Type' => 'text/xml'
+            ]
+        );
     }
 }
