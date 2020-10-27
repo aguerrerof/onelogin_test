@@ -105,6 +105,7 @@ class IndexController
             try {
                 $auth->processResponse($requestID);
             } catch (Error $e) {
+                return new Response($e->getMessage(), Response::HTTP_CONFLICT);
             } catch (ValidationError $e) {
                 return new Response($e->getMessage(), Response::HTTP_CONFLICT);
             }

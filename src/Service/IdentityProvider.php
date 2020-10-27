@@ -19,11 +19,23 @@ class IdentityProvider
      */
     private $configuration;
 
-    public function __construct(string $baseUrl, string $nameIdFormat, string $idpEntityId, string $ssoUrl, string $slsUrl, string $idpCert)
+    /**
+     * IdentityProvider constructor.
+     * @param string $baseUrl
+     * @param string $nameIdFormat
+     * @param string $idpEntityId
+     * @param string $ssoUrl
+     * @param string $slsUrl
+     * @param string $idpCert
+     * @param false $debug
+     * @param false $strict
+     */
+    public function __construct(string $baseUrl, string $nameIdFormat, string $idpEntityId, string $ssoUrl, string $slsUrl, string $idpCert, $debug = false, $strict = false)
     {
         $this->serviceProviderUrl = $baseUrl;
         $this->configuration = [
-            'debug' => true,
+            'debug' => $debug,
+            'strict' => $strict,
             'sp' => array(
                 'entityId' => $this->serviceProviderUrl . '/metadata',
                 'assertionConsumerService' => array(

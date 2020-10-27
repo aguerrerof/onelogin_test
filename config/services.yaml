@@ -9,19 +9,14 @@ parameters:
   onelogin.idp.sso_service.url: 'https://teamq-dev.onelogin.com/trust/saml2/http-post/sso/de21a386-47b2-4860-a12a-0d7d45db2746'
   onelogin.idp.sls_service.url: 'https://teamq-dev.onelogin.com/trust/saml2/http-redirect/slo/1290930'
   onelogin.idp.x509cert: '0E:27:28:9D:4A:85:BA:E3:8F:2D:3B:78:59:35:E0:12:9E:E8:28:D6'
-  onelogin.sp.NameIdFormat: 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress'
+  onelogin.sp.name_id_format: 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress'
+  onelogin.strict_mode: false
+  onelogin.debug_enabled: true
 services:
   # default configuration for services in *this* file
   _defaults:
     autowire: true      # Automatically injects dependencies in your services.
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-    bind:
-      $nameIdFormat: '%onelogin.sp.NameIdFormat%'
-      $baseUrl: '%onelogin.base_url%'
-      $idpEntityId: '%onelogin.idp.entity_id%'
-      $ssoUrl: '%onelogin.idp.sso_service.url%'
-      $slsUrl: '%onelogin.idp.sls_service.url%'
-      $idpCert: '%onelogin.idp.x509cert%'
   # makes classes in src/ available to be used as services
   # this creates a service per class whose id is the fully-qualified class name
   App\:
@@ -45,7 +40,9 @@ services:
 
   App\Service\IdentityProvider:
     arguments:
-      $nameIdFormat: '%onelogin.sp.NameIdFormat%'
+      $debug: '%onelogin.debug_enabled%'
+      $strict: '%onelogin.strict_mode%'
+      $nameIdFormat: '%onelogin.sp.name_id_format%'
       $baseUrl: '%onelogin.base_url%'
       $idpEntityId: '%onelogin.idp.entity_id%'
       $ssoUrl: '%onelogin.idp.sso_service.url%'
