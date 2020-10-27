@@ -20,17 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="808dd622-b951-4bf2-ab30-3ef8ad1c1ea0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/demo1/Readme.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/demo1/attrs.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/demo1/index.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/demo1/metadata.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/demo1/settings_example.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Controller/SAML/AttributesController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Controller/SAML/MetadataController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/services.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/services.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/AuthController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/SAML/IndexController.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -191,7 +181,7 @@
       <updated>1603748553632</updated>
       <workItem from="1603748555956" duration="67000" />
       <workItem from="1603748624053" duration="1551000" />
-      <workItem from="1603811814071" duration="5341000" />
+      <workItem from="1603811814071" duration="5666000" />
     </task>
     <servers />
   </component>
@@ -226,6 +216,10 @@
       <screen x="56" y="27" width="1310" height="741" />
     </state>
     <state x="389" y="117" width="633" height="568" key="NewPhpClassDialog/56.27.1310.741@56.27.1310.741" timestamp="1603814425975" />
+    <state x="467" y="81" width="478" height="640" key="RollbackChangesDialog" timestamp="1603817268671">
+      <screen x="56" y="27" width="1310" height="741" />
+    </state>
+    <state x="467" y="81" width="478" height="640" key="RollbackChangesDialog/56.27.1310.741@56.27.1310.741" timestamp="1603817268671" />
     <state x="375" y="174" key="run.anything.popup" timestamp="1603816704192">
       <screen x="56" y="27" width="1310" height="741" />
     </state>
