@@ -4,7 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-  onelogin.base_url:  '%env(BASE_URL)%'
+  onelogin.base_url: '%env(BASE_URL)%'
   onelogin.idp.entity_id: 'https://app.onelogin.com/saml/metadata/de21a386-47b2-4860-a12a-0d7d45db2746'
   onelogin.idp.sso_service.url: 'https://teamq-dev.onelogin.com/trust/saml2/http-post/sso/de21a386-47b2-4860-a12a-0d7d45db2746'
   onelogin.idp.sls_service.url: 'https://teamq-dev.onelogin.com/trust/saml2/http-redirect/slo/1290930'
@@ -43,3 +43,11 @@ services:
     public: true
     tags: [ 'controller.service_arguments' ]
 
+  App\Service\IdentityProvider:
+    arguments:
+      $nameIdFormat: '%onelogin.sp.NameIdFormat%'
+      $baseUrl: '%onelogin.base_url%'
+      $idpEntityId: '%onelogin.idp.entity_id%'
+      $ssoUrl: '%onelogin.idp.sso_service.url%'
+      $slsUrl: '%onelogin.idp.sls_service.url%'
+      $idpCert: '%onelogin.idp.x509cert%'

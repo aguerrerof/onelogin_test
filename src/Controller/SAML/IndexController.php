@@ -2,6 +2,7 @@
 
 namespace App\Controller\SAML;
 
+use App\Service\IdentityProvider;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
 use OneLogin\Saml2\Error as OneLogin_Saml2_Error;
@@ -12,49 +13,18 @@ use Symfony\Component\Routing\Annotation\Route;
 class IndexController
 {
     /**
-     * @var array[]
+     * @var IdentityProvider
      */
-    private $configuration_bundle;
-    /**
-     * @var string
-     */
-    private $spBaseUrl;
+    private $identityProviderService;
 
     /**
      * IndexController constructor.
-     * @param string $baseUrl
-     * @param string $nameIdFormat
-     * @param string $idpEntityId
-     * @param string $ssoUrl
-     * @param string $slsUrl
-     * @param string $idpCert
+     * @param IdentityProvider $identityProviderService
      */
-    public function __construct(string $baseUrl, string $nameIdFormat, string $idpEntityId, string $ssoUrl, string $slsUrl, string $idpCert)
+    public function __construct(IdentityProvider $identityProviderService)
     {
         //Not a good practice, I know
-        $this->spBaseUrl = $baseUrl;
-        $this->configuration_bundle = [
-            'sp' => array(
-                'entityId' => $this->spBaseUrl . '/metadata',
-                'assertionConsumerService' => array(
-                    'url' => $this->spBaseUrl . '/saml?acs',
-                ),
-                'singleLogoutService' => array(
-                    'url' => $this->spBaseUrl . '/saml?sls',
-                ),
-                'NameIDFormat' => $nameIdFormat,
-            ),
-            'idp' => array(
-                'entityId' => $idpEntityId,
-                'singleSignOnService' => array(
-                    'url' => $ssoUrl,
-                ),
-                'singleLogoutService' => array(
-                    'url' => $slsUrl,
-                ),
-                'x509cert' => $idpCert,
-            ),
-        ];
+        $this->identityProviderService = $identityProviderService;
     }
 
     /**
@@ -69,7 +39,7 @@ class IndexController
             session_start();
         }
         try {
-            $auth = new OneLogin_Saml2_Auth($this->configuration_bundle);
+            $auth = $this->identityProviderService->auth();
         } catch (Exception $e) {
             return new Response($e->getMessage());
         }
@@ -78,7 +48,7 @@ class IndexController
             //$auth->login();
 
             # If AuthNRequest ID need to be saved in order to later validate it, do instead
-            $ssoBuiltUrl = $auth->login(null, array(), false, false, true);
+            $ssoBuiltUrl =$this->identityProviderService->getSSOUrl($auth);
             $_SESSION['AuthNRequestID'] = $auth->getLastRequestID();
             header('Pragma: no-cache');
             header('Cache-Control: no-cache, must-revalidate');
@@ -86,7 +56,8 @@ class IndexController
             exit();
 
         } else if (isset($_GET['sso2'])) {
-            $returnTo = $this->spBaseUrl . '/attributes';
+            $configuration = $this->identityProviderService->getConfiguration();
+            $returnTo = $configuration["sp"]["entityId"];
             $auth->login($returnTo);
         } else if (isset($_GET['slo'])) {
             $returnTo = null;

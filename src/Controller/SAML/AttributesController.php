@@ -4,55 +4,24 @@
 namespace App\Controller\SAML;
 
 
+use App\Service\IdentityProvider;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AttributesController
 {
     /**
-     * @var string
+     * @var IdentityProvider
      */
-    private $spBaseUrl;
-    /**
-     * @var array[]
-     */
-    private $configuration_bundle;
+    private $identityProviderService;
 
     /**
      * AttributesController constructor.
-     * @param string $baseUrl
-     * @param string $nameIdFormat
-     * @param string $idpEntityId
-     * @param string $ssoUrl
-     * @param string $slsUrl
-     * @param string $idpCert
+     * @param IdentityProvider $identityProviderService
      */
-    public function __construct(string $baseUrl, string $nameIdFormat, string $idpEntityId, string $ssoUrl, string $slsUrl, string $idpCert)
+    public function __construct(IdentityProvider $identityProviderService)
     {
-        //Not a good practice, I know
-        $this->spBaseUrl = $baseUrl;
-        $this->configuration_bundle = [
-            'sp' => array(
-                'entityId' => $this->spBaseUrl . '/metadata',
-                'assertionConsumerService' => array(
-                    'url' => $this->spBaseUrl . '/saml?acs',
-                ),
-                'singleLogoutService' => array(
-                    'url' => $this->spBaseUrl . '/saml?sls',
-                ),
-                'NameIDFormat' => $nameIdFormat,
-            ),
-            'idp' => array(
-                'entityId' => $idpEntityId,
-                'singleSignOnService' => array(
-                    'url' => $ssoUrl,
-                ),
-                'singleLogoutService' => array(
-                    'url' => $slsUrl,
-                ),
-                'x509cert' => $idpCert,
-            ),
-        ];
+        $this->identityProviderService =  $identityProviderService;
     }
 
     /**
