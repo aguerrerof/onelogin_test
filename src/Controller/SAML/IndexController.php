@@ -4,6 +4,7 @@ namespace App\Controller\SAML;
 
 use App\Service\IdentityProvider;
 use Exception;
+use OneLogin\Saml2\Utils;
 use OneLogin\Saml2\ValidationError;
 use Symfony\Component\HttpFoundation\Response;
 use OneLogin\Saml2\Error;
@@ -33,9 +34,6 @@ class IndexController
     public function saml()
     {
         if (!isset($_SESSION)) {
-            session_start();
-        } else {
-            session_destroy();
             session_start();
         }
         try {
@@ -127,7 +125,7 @@ class IndexController
             $_SESSION['samlNameIdSPNameQualifier'] = $auth->getNameIdSPNameQualifier();
             $_SESSION['samlSessionIndex'] = $auth->getSessionIndex();
             unset($_SESSION['AuthNRequestID']);
-            if (isset($_POST['RelayState']) && OneLogin_Saml2_Utils::getSelfURL() != $_POST['RelayState']) {
+            if (isset($_POST['RelayState']) && Utils::getSelfURL() != $_POST['RelayState']) {
                 $auth->redirectTo($_POST['RelayState']);
             }
         } else if (isset($_GET['sls'])) {

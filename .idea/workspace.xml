@@ -20,8 +20,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="808dd622-b951-4bf2-ab30-3ef8ad1c1ea0" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/services.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/services.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/SAML/IndexController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/SAML/IndexController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Service/IdentityProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/IdentityProvider.php" afterDir="false" />
     </list>
@@ -157,7 +157,7 @@
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/vendor/onelogin/php-saml/certs" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -168,9 +168,12 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/config/certs" />
       <recent name="$PROJECT_DIR$/src/Controller/SAML" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/vendor/onelogin/php-saml/certs" />
+      <recent name="$PROJECT_DIR$/config/certs" />
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
@@ -184,7 +187,8 @@
       <updated>1603748553632</updated>
       <workItem from="1603748555956" duration="67000" />
       <workItem from="1603748624053" duration="1551000" />
-      <workItem from="1603811814071" duration="12322000" />
+      <workItem from="1603811814071" duration="15196000" />
+      <workItem from="1603896498943" duration="3694000" />
     </task>
     <servers />
   </component>
@@ -201,8 +205,13 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="388" y="203" width="625" height="403" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1603838058235">
+      <screen x="56" y="27" width="1310" height="741" />
+    </state>
+    <state x="388" y="203" width="625" height="403" key="#com.intellij.fileTypes.FileTypeChooser/56.27.1310.741@56.27.1310.741" timestamp="1603838058235" />
     <state x="56" y="27" width="1205" height="741" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1603814392960">
       <screen x="56" y="27" width="1310" height="741" />
     </state>
