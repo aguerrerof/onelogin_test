@@ -1,2 +1,5 @@
 # onelogin_test
-Run: symfony:server:start
+
+Install symfony cli, https://symfony.com/download, 
+then, run:
+##symfony:server:start
