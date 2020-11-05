@@ -20,10 +20,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="808dd622-b951-4bf2-ab30-3ef8ad1c1ea0" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/SAML/IndexController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/SAML/IndexController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Service/IdentityProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/IdentityProvider.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/SAML/AttributesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/SAML/AttributesController.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -189,6 +187,7 @@
       <workItem from="1603748624053" duration="1551000" />
       <workItem from="1603811814071" duration="15196000" />
       <workItem from="1603896498943" duration="3694000" />
+      <workItem from="1604594303938" duration="1614000" />
     </task>
     <servers />
   </component>

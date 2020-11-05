@@ -50,9 +50,9 @@ class AttributesController
                 $response .= "<p>You don't have any attribute</p>";
             }
 
-            $response .= "<p><a href='{$this->spBaseUrl}/saml?slo' >Logout</a></p>";
+            $response .= "<p><a href='{$this->identityProviderService->getServiceProviderUrl()}/saml?slo' >Logout</a></p>";
         } else {
-            $response .= "<p><a href='{$this->spBaseUrl}/saml?sso2'>Login and access later to this page</a></p>";
+            $response .= "<p><a href='{$this->identityProviderService->getServiceProviderUrl()}/saml?sso2'>Login and access later to this page</a></p>";
 
         }
         return new Response($response);
