@@ -2,7 +2,7 @@
 
 namespace App\Controller\SAML;
 
-use App\Service\IdentityProvider;
+use App\Service\Adapters\OneLoginAdapter;
 use Exception;
 use OneLogin\Saml2\Utils;
 use OneLogin\Saml2\ValidationError;
@@ -13,15 +13,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class IndexController
 {
     /**
-     * @var IdentityProvider
+     * @var OneLoginAdapter
      */
     private $identityProviderService;
 
     /**
      * IndexController constructor.
-     * @param IdentityProvider $identityProviderService
+     * @param OneLoginAdapter $identityProviderService
      */
-    public function __construct(IdentityProvider $identityProviderService)
+    public function __construct(OneLoginAdapter $identityProviderService)
     {
         //Not a good practice, I know
         $this->identityProviderService = $identityProviderService;
@@ -45,7 +45,8 @@ class IndexController
             //$auth->login();
 
             # If AuthNRequest ID need to be saved in order to later validate it, do instead
-            $ssoBuiltUrl = $this->identityProviderService->getSSOUrl($auth);
+            $this->identityProviderService->setAuth($auth);
+            $ssoBuiltUrl = $this->identityProviderService->getSSOUrl();
             $_SESSION['AuthNRequestID'] = $auth->getLastRequestID();
             header('Pragma: no-cache');
             header('Cache-Control: no-cache, must-revalidate');

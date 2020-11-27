@@ -4,22 +4,22 @@
 namespace App\Controller\SAML;
 
 
-use App\Service\IdentityProvider;
+use App\Service\Adapters\OneLoginAdapter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AttributesController
 {
     /**
-     * @var IdentityProvider
+     * @var OneLoginAdapter
      */
     private $identityProviderService;
 
     /**
      * AttributesController constructor.
-     * @param IdentityProvider $identityProviderService
+     * @param OneLoginAdapter $identityProviderService
      */
-    public function __construct(IdentityProvider $identityProviderService)
+    public function __construct(OneLoginAdapter $identityProviderService)
     {
         $this->identityProviderService =  $identityProviderService;
     }

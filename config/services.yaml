@@ -38,7 +38,7 @@ services:
     public: true
     tags: [ 'controller.service_arguments' ]
 
-  App\Service\IdentityProvider:
+  App\Service\Adapters\OneLoginAdapter:
     arguments:
       $debug: '%onelogin.debug_enabled%'
       $strict: '%onelogin.strict_mode%'
